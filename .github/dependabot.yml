@@ -1,0 +1,9 @@
+version: 2
+updates:
+  - directory: /
+    package-ecosystem: cargo
+    schedule:
+      interval: daily
+    labels:
+      - "build(deps): dependabot"
+      - "priority: medium"
