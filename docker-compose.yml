@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  postgres_db:
+    image: postgres:alpine
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: houston
+      POSTGRES_PASSWORD: houston
+      POSTGRES_HOST_AUTH_METHOD: trust
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@galacticraft.dev
+      PGADMIN_DEFAULT_PASSWORD: secret
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    ports:
+      - "8091:80"
+    volumes:
+      - ./pgadmin_defaults.json:/pgadmin4/servers.json
+volumes:
+  db-data:

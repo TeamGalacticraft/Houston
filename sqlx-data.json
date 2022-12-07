@@ -1,0 +1,140 @@
+{
+  "db": "PostgreSQL",
+  "84c0b0bd16147d508c19db3fdabb19ef6ab2572682079d3d792bd0b512abaf17": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Text",
+          "Text",
+          "TextArray",
+          "Timestamptz"
+        ]
+      }
+    },
+    "query": "\n            insert into users (\n                id, username, avatar_url,\n                roles, created\n            ) values ($1, $2, $3, $4, $5)\n            "
+  },
+  "917cab5461fed7b3791eb728a09c2c484432446f8ad599494a0efab6b1742cc6": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "username",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "avatar_url",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "roles",
+          "ordinal": 3,
+          "type_info": "TextArray"
+        },
+        {
+          "name": "created",
+          "ordinal": 4,
+          "type_info": "Timestamptz"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n            select u.id, u.username, u.avatar_url, u.roles, u.created\n            from users u\n            where u.id = $1\n            "
+  },
+  "c45ebcf5d843844572c8a4e4ce3fac41d54eff6da4679d3b839d413d8101e383": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Int8",
+          "Text",
+          "Text",
+          "Text"
+        ]
+      }
+    },
+    "query": "\n            insert into capes (id, name, category, texture_url)\n            values ($1, $2, $3, $4)\n            "
+  },
+  "e345b36464f452abde34155cc0994d63306ba87df0dd1046fd1eabcb4bff96f3": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        },
+        {
+          "name": "name",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "category",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "texture_url",
+          "ordinal": 3,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int8"
+        ]
+      }
+    },
+    "query": "\n            select c.id, c.name, c.category, c.texture_url\n            from capes c\n            where c.id = $1\n            "
+  },
+  "f34ffed9b94962825e1e8d72422a20e057a9c6a6c3ec9e28a1e2d3ada41ba81d": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n            delete from users\n            where id = $1\n            "
+  },
+  "faf08ea8244fe705fcb4b14fe1738912a9f5ad389b8e0602c55bcffad31303dd": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Int8"
+        ]
+      }
+    },
+    "query": "\n            delete from capes\n            where id = $1\n            "
+  }
+}
