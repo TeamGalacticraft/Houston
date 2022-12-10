@@ -1,5 +1,83 @@
 {
   "db": "PostgreSQL",
+  "2470e9c8b4afb50ffbd5b6b300ffc31aed5f4926c3e8ef37bb466a037ef347b5": {
+    "describe": {
+      "columns": [
+        {
+          "name": "player",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "username",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "legacy_name",
+          "ordinal": 2,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": []
+      }
+    },
+    "query": "\n            select pc.player, u.username, c.legacy_name\n            from capes c, users u, player_capes pc\n            where pc.cape = c.id and c.legacy_name is not null\n            "
+  },
+  "414d9ade0574e866c0cba4dc832a008a7e3bee92910d20b14755c3ed67b4368e": {
+    "describe": {
+      "columns": [
+        {
+          "name": "player",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "id",
+          "ordinal": 1,
+          "type_info": "Int8"
+        },
+        {
+          "name": "name",
+          "ordinal": 2,
+          "type_info": "Text"
+        },
+        {
+          "name": "category",
+          "ordinal": 3,
+          "type_info": "Text"
+        },
+        {
+          "name": "texture_url",
+          "ordinal": 4,
+          "type_info": "Text"
+        },
+        {
+          "name": "legacy_name",
+          "ordinal": 5,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": []
+      }
+    },
+    "query": "\nselect pc.player, c.id, c.name, c.category, c.texture_url, c.legacy_name\nfrom player_capes pc, capes c\nwhere pc.cape = c.id\n"
+  },
   "5080144616f433794a6dc3ccbec18839f419ff9783d390bdd2b299cccbf3df21": {
     "describe": {
       "columns": [],
@@ -13,49 +91,33 @@
     },
     "query": "\n                    update capes\n                    set category = $1\n                    where id = $2\n                    "
   },
-  "84c0b0bd16147d508c19db3fdabb19ef6ab2572682079d3d792bd0b512abaf17": {
-    "describe": {
-      "columns": [],
-      "nullable": [],
-      "parameters": {
-        "Left": [
-          "Uuid",
-          "Text",
-          "Text",
-          "TextArray",
-          "Timestamptz"
-        ]
-      }
-    },
-    "query": "\n            insert into users (\n                id, username, avatar_url,\n                roles, created\n            ) values ($1, $2, $3, $4, $5)\n            "
-  },
-  "917cab5461fed7b3791eb728a09c2c484432446f8ad599494a0efab6b1742cc6": {
+  "7fd2da755749153108d35d89f9a0aac53f9cbe66485e9e9137d11d98fcec77b7": {
     "describe": {
       "columns": [
         {
           "name": "id",
           "ordinal": 0,
-          "type_info": "Uuid"
+          "type_info": "Int8"
         },
         {
-          "name": "username",
+          "name": "name",
           "ordinal": 1,
           "type_info": "Text"
         },
         {
-          "name": "avatar_url",
+          "name": "category",
           "ordinal": 2,
           "type_info": "Text"
         },
         {
-          "name": "roles",
+          "name": "texture_url",
           "ordinal": 3,
-          "type_info": "TextArray"
+          "type_info": "Text"
         },
         {
-          "name": "created",
+          "name": "legacy_name",
           "ordinal": 4,
-          "type_info": "Timestamptz"
+          "type_info": "Text"
         }
       ],
       "nullable": [
@@ -63,7 +125,7 @@
         false,
         false,
         false,
-        false
+        true
       ],
       "parameters": {
         "Left": [
@@ -71,7 +133,48 @@
         ]
       }
     },
-    "query": "\n            select u.id, u.username, u.avatar_url, u.roles, u.created\n            from users u\n            where u.id = $1\n            "
+    "query": "\n            select c.id, c.name, c.category, c.texture_url, c.legacy_name\n            from capes c, player_capes pc\n            where c.id = pc.cape and pc.player = $1\n            "
+  },
+  "832b5573096d724eb9df13830d243c539757bebf944b8685804752e53cfa5087": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Text",
+          "TextArray",
+          "Timestamptz"
+        ]
+      }
+    },
+    "query": "\n            insert into users (\n                id, username,\n                roles, created\n            ) values ($1, $2, $3, $4)\n            "
+  },
+  "842a1561db950118a7fa8ea18c2fc276e9bc2e725de413126f9cd6df2020e818": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Int8"
+        ]
+      }
+    },
+    "query": "\n                    update capes\n                    set legacy_name = $1\n                    where id = $2\n                    "
+  },
+  "86cf56f22b9ae70f696b1b2428128d89cf24412b7cf495cf3f9a6925de3f619f": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Int8",
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n            update player_capes\n            set cape = $1\n            where player = $2\n            "
   },
   "a895b666bb9870553f5e500759f93a3196b378abc3ea7c5c36aecd735ea5be30": {
     "describe": {
@@ -99,7 +202,20 @@
     },
     "query": "\n                    update capes\n                    set texture_url = $1\n                    where id = $2\n                    "
   },
-  "d73ff7892f78c1804d67a78ba246214a94c2a6e5fb64ed802ae363a183f6d8f6": {
+  "b8d9aab801e1b777cadc7d57d47ca4d1953029cd4e0611929c9563344314a7ee": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n                    update users\n                    set username = $1\n                    where id = $2\n                    "
+  },
+  "d1a22f559c0c9c0489f70c794f204092dec5f5be7b434a6e8ce4fc3f78e014a8": {
     "describe": {
       "columns": [],
       "nullable": [],
@@ -107,13 +223,27 @@
         "Left": [
           "Text",
           "Text",
+          "Text",
           "Text"
         ]
       }
     },
-    "query": "\n            insert into capes (name, category, texture_url)\n            values ($1, $2, $3)\n            "
+    "query": "\n            insert into capes (name, category, texture_url, legacy_name)\n            values ($1, $2, $3, $4)\n            "
   },
-  "e345b36464f452abde34155cc0994d63306ba87df0dd1046fd1eabcb4bff96f3": {
+  "d209b3319ee9df6c19611391a4fdd3abc9a73eb43251e24911d89da452bbb1a4": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Int8"
+        ]
+      }
+    },
+    "query": "\n            insert into player_capes (player, cape)\n            values ($1, $2)\n            "
+  },
+  "e6ffda7f9340b0ef7fa3f8734700afd8bec70eb4f4fa5f89703f65ef3f3a5fd3": {
     "describe": {
       "columns": [
         {
@@ -135,6 +265,62 @@
           "name": "texture_url",
           "ordinal": 3,
           "type_info": "Text"
+        },
+        {
+          "name": "legacy_name",
+          "ordinal": 4,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "parameters": {
+        "Left": [
+          "Int8"
+        ]
+      }
+    },
+    "query": "\n            select c.id, c.name, c.category, c.texture_url, c.legacy_name\n            from capes c\n            where c.id = $1\n            "
+  },
+  "ed33e35ee5ac460018472e5da5ae05c0162d07274327ebef31a26ae298f291d6": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n            delete from player_capes\n            where player = $1\n            "
+  },
+  "f317c970b9cb9492960c82c3d45fab6e52aebe7fdc16f1a69a3ba308aa014624": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Uuid"
+        },
+        {
+          "name": "username",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "roles",
+          "ordinal": 2,
+          "type_info": "TextArray"
+        },
+        {
+          "name": "created",
+          "ordinal": 3,
+          "type_info": "Timestamptz"
         }
       ],
       "nullable": [
@@ -145,11 +331,11 @@
       ],
       "parameters": {
         "Left": [
-          "Int8"
+          "Uuid"
         ]
       }
     },
-    "query": "\n            select c.id, c.name, c.category, c.texture_url\n            from capes c\n            where c.id = $1\n            "
+    "query": "\n            select u.id, u.username, u.roles, u.created\n            from users u\n            where u.id = $1\n            "
   },
   "f34ffed9b94962825e1e8d72422a20e057a9c6a6c3ec9e28a1e2d3ada41ba81d": {
     "describe": {
