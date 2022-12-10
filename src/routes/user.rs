@@ -1,4 +1,4 @@
-use actix_web::{get, HttpRequest, HttpResponse, patch, web};
+use actix_web::{delete, get, HttpRequest, HttpResponse, patch, web};
 use actix_web::web::{scope, ServiceConfig};
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
@@ -6,7 +6,7 @@ use uuid::Uuid;
 use crate::database::models::user_model::UserModel;
 use crate::models::user::Role;
 use crate::routes::ApiError;
-use crate::utils::auth::{check_is_admin_from_headers, get_user_from_headers};
+use crate::utils::auth::{check_is_admin_from_headers, check_is_self_or_admin_from_headers, get_user_from_headers};
 
 pub fn config(cfg: &mut ServiceConfig) {
     cfg.service(
@@ -14,6 +14,7 @@ pub fn config(cfg: &mut ServiceConfig) {
             .service(current_user)
             .service(get_user)
             .service(update_user)
+            .service(delete_user)
     );
 }
 
@@ -90,6 +91,31 @@ pub async fn update_user(
         Ok(HttpResponse::NotFound().json(crate::models::error::ApiError {
             err: "not_found",
             msg: "user not found",
+        }))
+    }
+}
+
+#[delete("/{uuid}")]
+pub async fn delete_user(
+    req: HttpRequest,
+    info: web::Path<(String,)>,
+    pool: web::Data<PgPool>
+) -> Result<HttpResponse, ApiError> {
+    let id = Uuid::parse_str(&info.into_inner().0)?;
+    let _user = UserModel::get(id, &**pool).await?;
+
+    if let Some(_) = _user {
+        check_is_self_or_admin_from_headers(req.headers(), id, &**pool).await?;
+
+        let mut trans = pool.begin().await?;
+        UserModel::remove(id, &mut trans).await?;
+        trans.commit().await?;
+
+        Ok(HttpResponse::Ok().json(()))
+    } else {
+        Ok(HttpResponse::NotFound().json(crate::models::error::ApiError {
+            err: "not_found",
+            msg: "user not found"
         }))
     }
 }

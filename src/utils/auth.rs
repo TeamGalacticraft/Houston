@@ -218,3 +218,19 @@ where E: sqlx::Executor<'a, Database = sqlx::Postgres>
         Err(AuthError::InvalidCreds)
     }
 }
+
+pub async fn check_is_self_or_admin_from_headers<'a, 'b, E>(
+    headers: &HeaderMap,
+    id: Uuid,
+    exec: E
+) -> Result<User, AuthError>
+where E: sqlx::Executor<'a, Database = sqlx::Postgres>
+{
+    let user = get_user_from_headers(headers, exec).await?;
+
+    if user.roles.contains(&Role::Admin) || user.id == id {
+        Ok(user)
+    } else {
+        Err(AuthError::InvalidCreds)
+    }
+}
