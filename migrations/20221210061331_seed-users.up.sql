@@ -1,5 +1,5 @@
 insert into users (id, username, avatar_url, roles)
-values ('7662d989-17e0-4797-bb21-23745ea59664',
+values ('e655aa98-5fec-4b4e-b03a-7cd71df90b05',
         'JustPyrrha',
-        'https://visage.surgeplay.com/face/512/7662d98917e04797bb2123745ea59664',
+        'random string this cause is removed now',
         array ['admin']);
