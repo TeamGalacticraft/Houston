@@ -89,15 +89,29 @@ pub struct MSAAuthCode {
 #[get("/microsoft")]
 pub async fn auth_msa(
     Query(info): Query<MSAAuthCode>,
-    client: Data<PgPool>
+    pool: Data<PgPool>
 ) -> Result<HttpResponse, AuthError> {
-    let mut trans = client.begin().await?;
+    let mut trans = pool.begin().await?;
     let token = get_token_from_msa_code(info.code).await?;
     let profile = get_profile_from_token(&token).await?;
 
     let user_result = UserModel::get(Uuid::parse_str(profile.id.as_str())?, &mut *trans).await?;
     match user_result {
-        Some(_) => {},
+        Some(user) => {
+            if user.username != profile.name {
+                sqlx::query!(
+                    "
+                    update users
+                    set username = $1
+                    where id = $2
+                    ",
+                    profile.name,
+                    user.id
+                )
+                    .execute(&**pool)
+                    .await?;
+            }
+        },
         None => {
             UserModel {
                 id: Uuid::parse_str(&profile.id)?,
