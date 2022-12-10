@@ -5,7 +5,6 @@ use crate::models::user::Role;
 pub struct UserModel {
     pub id: Uuid,
     pub username: String,
-    pub avatar_url: String,
     pub roles: Vec<Role>,
     pub created: DateTime<Utc>,
 }
@@ -20,13 +19,12 @@ impl UserModel {
         sqlx::query!(
             "
             insert into users (
-                id, username, avatar_url,
+                id, username,
                 roles, created
-            ) values ($1, $2, $3, $4, $5)
+            ) values ($1, $2, $3, $4)
             ",
             self.id,
             self.username,
-            self.avatar_url,
             &role_strings,
             self.created
         )
@@ -44,7 +42,7 @@ impl UserModel {
     {
         let result = sqlx::query!(
             "
-            select u.id, u.username, u.avatar_url, u.roles, u.created
+            select u.id, u.username, u.roles, u.created
             from users u
             where u.id = $1
             ",
@@ -57,7 +55,6 @@ impl UserModel {
             Ok(Some(UserModel {
                 id,
                 username: row.username,
-                avatar_url: row.avatar_url,
                 roles: row.roles.iter().map(|x| Role::from_string(x)).collect(),
                 created: row.created,
             }))

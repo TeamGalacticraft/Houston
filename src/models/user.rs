@@ -8,7 +8,6 @@ use crate::database::models::user_model::UserModel;
 pub struct User {
     pub id: Uuid,
     pub username: String,
-    pub avatar_url: String,
     pub roles: Vec<Role>,
     pub created: DateTime<Utc>
 }
@@ -54,7 +53,6 @@ impl From<UserModel> for User {
         Self {
             id: model.id,
             username: model.username,
-            avatar_url: model.avatar_url,
             roles: model.roles,
             created: model.created,
         }

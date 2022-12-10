@@ -116,7 +116,6 @@ pub async fn auth_msa(
             UserModel {
                 id: Uuid::parse_str(&profile.id)?,
                 username: profile.name,
-                avatar_url: format!("https://visage.surgeplay.com/face/512/{}", profile.id),
                 roles: vec![],
                 created: Utc::now(),
             }
