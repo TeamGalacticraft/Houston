@@ -31,7 +31,7 @@ pub async fn get_user(
     info: web::Path<(String,)>,
     pool: web::Data<PgPool>
 ) -> Result<HttpResponse, ApiError> {
-    let id = Uuid::parse_str(&*info.into_inner().0)?;
+    let id = Uuid::parse_str(&info.into_inner().0)?;
     let user_data = UserModel::get(id, &**pool).await?;
 
     if let Some(data) = user_data {
@@ -59,7 +59,7 @@ pub async fn update_user(
 ) -> Result<HttpResponse, ApiError> {
     check_is_admin_from_headers(req.headers(), &**pool).await?;
 
-    let id = Uuid::parse_str(&*info.into_inner().0)?;
+    let id = Uuid::parse_str(&info.into_inner().0)?;
     let user_data = UserModel::get(id, &**pool).await?;
 
     if let Some(mut model) = user_data {

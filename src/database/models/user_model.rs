@@ -58,7 +58,7 @@ impl UserModel {
                 id,
                 username: row.username,
                 avatar_url: row.avatar_url,
-                roles: row.roles.iter().map(|x| Role::from_string(&x)).collect(),
+                roles: row.roles.iter().map(|x| Role::from_string(x)).collect(),
                 created: row.created,
             }))
         } else {

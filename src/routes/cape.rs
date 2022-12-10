@@ -74,7 +74,7 @@ pub async fn create_cape(
         .insert(&mut trans)
         .await?;
 
-    Ok(HttpResponse::Ok().json({}))
+    Ok(HttpResponse::Ok().json(()))
 }
 
 #[patch("/{id}")]
@@ -164,7 +164,7 @@ pub async fn delete_cape(
         CapeModel::remove(id, &mut trans).await?;
         trans.commit().await?;
         
-        Ok(HttpResponse::Ok().json({}))
+        Ok(HttpResponse::Ok().json(()))
     } else {
         Ok(HttpResponse::BadRequest().json(crate::models::error::ApiError {
             err: "bad_request",

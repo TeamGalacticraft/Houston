@@ -76,7 +76,7 @@ pub async fn auth_begin() -> Result<HttpResponse, AuthError> {
 
     Ok(HttpResponse::TemporaryRedirect()
         .append_header(("Location", &*url))
-        .json({})
+        .json(())
     )
 }
 
@@ -93,14 +93,14 @@ pub async fn auth_msa(
 ) -> Result<HttpResponse, AuthError> {
     let mut trans = client.begin().await?;
     let token = get_token_from_msa_code(info.code).await?;
-    let profile = get_profile_from_token(&*token).await?;
+    let profile = get_profile_from_token(&token).await?;
 
     let user_result = UserModel::get(Uuid::parse_str(profile.id.as_str())?, &mut *trans).await?;
     match user_result {
         Some(_) => {},
         None => {
             UserModel {
-                id: Uuid::parse_str(&*profile.id)?,
+                id: Uuid::parse_str(&profile.id)?,
                 username: profile.name,
                 avatar_url: format!("https://visage.surgeplay.com/face/512/{}", profile.id),
                 roles: vec![],
@@ -113,5 +113,5 @@ pub async fn auth_msa(
     }
     let site_url = dotenvy::var("SITE_URL").unwrap();
 
-    Ok(HttpResponse::TemporaryRedirect().append_header(("Location", format!("{}?code={}", &site_url, &token))).json({}))
+    Ok(HttpResponse::TemporaryRedirect().append_header(("Location", format!("{}?code={}", &site_url, &token))).json(()))
 }

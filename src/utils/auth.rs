@@ -19,7 +19,7 @@ pub enum AuthError {
     #[error("JSON error: {0}")]
     SerDe(#[from] serde_json::Error),
     #[error("Error communicating with Microsoft: {0}")]
-    MSA(#[from] reqwest::Error),
+    Msa(#[from] reqwest::Error),
     #[error("Invalid credentials")]
     InvalidCreds,
     #[error("Uuid parse error: {0}")]
@@ -164,7 +164,7 @@ pub async fn get_profile_from_token(
     let client = get_reqwest_client().build()?;
     let mc_profile: MinecraftProfile = client
         .get("https://api.minecraftservices.com/minecraft/profile")
-        .bearer_auth(&token)
+        .bearer_auth(token)
         .send()
         .await?
         .json()
