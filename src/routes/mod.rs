@@ -3,12 +3,14 @@ mod health;
 mod not_found;
 mod auth;
 mod user;
+mod cape;
 
 use actix_web::http::StatusCode;
 use actix_web::{HttpResponse, web};
 use actix_web::body::BoxBody;
 pub use auth::config as auth_config;
 pub use user::config as user_config;
+pub use cape::config as cape_config;
 pub use self::index::index_get;
 pub use self::health::health_get;
 pub use self::not_found::not_found;
@@ -18,6 +20,7 @@ pub fn v1_config(cfg: &mut web::ServiceConfig) {
         web::scope("v1")
             .configure(auth_config)
             .configure(user_config)
+            .configure(cape_config)
     );
 }
 

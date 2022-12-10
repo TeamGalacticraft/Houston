@@ -14,10 +14,9 @@ impl CapeModel {
     ) -> Result<(), sqlx::error::Error> {
         sqlx::query!(
             "
-            insert into capes (id, name, category, texture_url)
-            values ($1, $2, $3, $4)
+            insert into capes (name, category, texture_url)
+            values ($1, $2, $3)
             ",
-            self.id,
             self.name,
             self.category.to_string(),
             self.texture_url

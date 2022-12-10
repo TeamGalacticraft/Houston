@@ -1,5 +1,18 @@
 {
   "db": "PostgreSQL",
+  "5080144616f433794a6dc3ccbec18839f419ff9783d390bdd2b299cccbf3df21": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Int8"
+        ]
+      }
+    },
+    "query": "\n                    update capes\n                    set category = $1\n                    where id = $2\n                    "
+  },
   "84c0b0bd16147d508c19db3fdabb19ef6ab2572682079d3d792bd0b512abaf17": {
     "describe": {
       "columns": [],
@@ -73,20 +86,32 @@
     },
     "query": "\n                update users\n                set roles = $1\n                where id = $2\n                "
   },
-  "c45ebcf5d843844572c8a4e4ce3fac41d54eff6da4679d3b839d413d8101e383": {
+  "ae20d83644ebfc6a649b0f37ba0a0b769b09309cb854e77bf8d3226697da8f7a": {
     "describe": {
       "columns": [],
       "nullable": [],
       "parameters": {
         "Left": [
-          "Int8",
+          "Text",
+          "Int8"
+        ]
+      }
+    },
+    "query": "\n                    update capes\n                    set texture_url = $1\n                    where id = $2\n                    "
+  },
+  "d73ff7892f78c1804d67a78ba246214a94c2a6e5fb64ed802ae363a183f6d8f6": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
           "Text",
           "Text",
           "Text"
         ]
       }
     },
-    "query": "\n            insert into capes (id, name, category, texture_url)\n            values ($1, $2, $3, $4)\n            "
+    "query": "\n            insert into capes (name, category, texture_url)\n            values ($1, $2, $3)\n            "
   },
   "e345b36464f452abde34155cc0994d63306ba87df0dd1046fd1eabcb4bff96f3": {
     "describe": {
@@ -137,6 +162,19 @@
       }
     },
     "query": "\n            delete from users\n            where id = $1\n            "
+  },
+  "f50552eb1e9400354bcf7915ff22a7295a95b33d6021760cce186f35a8dfea10": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Text",
+          "Int8"
+        ]
+      }
+    },
+    "query": "\n                    update capes\n                    set name = $1\n                    where id = $2\n                    "
   },
   "faf08ea8244fe705fcb4b14fe1738912a9f5ad389b8e0602c55bcffad31303dd": {
     "describe": {
