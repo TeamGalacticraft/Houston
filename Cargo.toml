@@ -17,7 +17,7 @@ actix = "0.13.0"
 actix-cors = "0.6.4"
 actix-rt = "2.7.0"
 actix-web = "4.2.1"
-chrono = { version = "0.4.23", features = ["serde"] }
+chrono = { version = "0.4.23", features = ["serde"], default-features = false }
 dotenvy = "0.15.6"
 env_logger = "0.10.0"
 log = "0.4.17"
