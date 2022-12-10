@@ -60,6 +60,19 @@
     },
     "query": "\n            select u.id, u.username, u.avatar_url, u.roles, u.created\n            from users u\n            where u.id = $1\n            "
   },
+  "a895b666bb9870553f5e500759f93a3196b378abc3ea7c5c36aecd735ea5be30": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "TextArray",
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n                update users\n                set roles = $1\n                where id = $2\n                "
+  },
   "c45ebcf5d843844572c8a4e4ce3fac41d54eff6da4679d3b839d413d8101e383": {
     "describe": {
       "columns": [],

@@ -6,7 +6,7 @@ use thiserror::Error;
 use uuid::Uuid;
 use crate::database::models;
 use crate::database::models::user_model::UserModel;
-use crate::models::user::User;
+use crate::models::user::{Role, User};
 
 #[derive(Error, Debug)]
 pub enum AuthError {
@@ -202,4 +202,19 @@ where E: sqlx::Executor<'a, Database = sqlx::Postgres>
         .map_err(|_| AuthError::InvalidCreds)?;
 
     get_user_from_token(token, exec).await
+}
+
+pub async fn check_is_admin_from_headers<'a, 'b, E>(
+    headers: &HeaderMap,
+    exec: E
+) -> Result<User, AuthError>
+where E: sqlx::Executor<'a, Database = sqlx::Postgres>
+{
+    let user = get_user_from_headers(headers, exec).await?;
+
+    if user.roles.contains(&Role::Admin) {
+        Ok(user)
+    } else {
+        Err(AuthError::InvalidCreds)
+    }
 }
