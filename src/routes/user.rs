@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 use actix_web::{delete, get, HttpRequest, HttpResponse, patch, route, web};
 use actix_web::web::{scope, ServiceConfig};
-use reqwest::Body;
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 use uuid::Uuid;
@@ -230,7 +229,7 @@ pub async fn list_capes(
 ) -> Result<HttpResponse, ApiError> {
     let capes = PlayerCapeModel::get_list(&**pool).await?;
     Ok(HttpResponse::Ok().json(capes.iter().map(|x| {
-        (*x.0, Cape::from(*x.1))
+        (x.0.clone(), Cape::from(x.1.clone()))
     }).collect::<HashMap<Uuid, Cape>>()))
 }
 

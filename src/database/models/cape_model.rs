@@ -1,6 +1,6 @@
 use crate::models::cape::Category;
 
-#[derive(Copy)]
+#[derive(Clone)]
 pub struct CapeModel {
     pub id: i64,
     pub name: String,
