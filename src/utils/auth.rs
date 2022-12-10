@@ -180,9 +180,13 @@ pub async fn get_user_from_token<'a, 'b, E>(
 where E: sqlx::Executor<'a, Database = sqlx::Postgres>
 {
     let profile = get_profile_from_token(token).await?;
-    let user_model = UserModel::get(Uuid::parse_str(profile.id.as_str())?, exec).await?.unwrap();
+    let user_model = UserModel::get(Uuid::parse_str(profile.id.as_str())?, exec).await?;
 
-    Ok(User::from(user_model))
+    if let Some(user) = user_model {
+        Ok(User::from(user))
+    } else {
+        Err(AuthError::InvalidCreds)
+    }
 }
 
 pub async fn get_user_from_headers<'a, 'b, E>(
