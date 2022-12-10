@@ -108,6 +108,7 @@ pub async fn auth_msa(
             }
                 .insert(&mut trans)
                 .await?;
+            trans.commit().await?;
         }
     }
     let site_url = dotenvy::var("SITE_URL").unwrap();
