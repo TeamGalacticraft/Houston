@@ -1,10 +1,12 @@
 use crate::models::cape::Category;
 
+#[derive(Copy)]
 pub struct CapeModel {
     pub id: i64,
     pub name: String,
     pub category: Category,
-    pub texture_url: String
+    pub texture_url: String,
+    pub legacy_name: Option<String>
 }
 
 impl CapeModel {
@@ -14,12 +16,13 @@ impl CapeModel {
     ) -> Result<(), sqlx::error::Error> {
         sqlx::query!(
             "
-            insert into capes (name, category, texture_url)
-            values ($1, $2, $3)
+            insert into capes (name, category, texture_url, legacy_name)
+            values ($1, $2, $3, $4)
             ",
             self.name,
             self.category.to_string(),
-            self.texture_url
+            self.texture_url,
+            self.legacy_name
         )
             .execute(&mut *trans)
             .await?;
@@ -34,7 +37,7 @@ impl CapeModel {
     {
         let result = sqlx::query!(
             "
-            select c.id, c.name, c.category, c.texture_url
+            select c.id, c.name, c.category, c.texture_url, c.legacy_name
             from capes c
             where c.id = $1
             ",
@@ -49,6 +52,7 @@ impl CapeModel {
                 name: row.name,
                 category: Category::from_string(&row.category),
                 texture_url: row.texture_url,
+                legacy_name: row.legacy_name
             }))
         } else {
             Ok(None)

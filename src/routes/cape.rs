@@ -46,14 +46,16 @@ pub async fn get_cape(
 pub struct NewCape {
     pub name: String,
     pub category: Category,
-    pub texture_url: String
+    pub texture_url: String,
+    pub legacy_name: Option<String>
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct EditedCape {
     pub name: Option<String>,
     pub category: Option<Category>,
-    pub texture_url: Option<String>
+    pub texture_url: Option<String>,
+    pub legacy_name: Option<Option<String>>
 }
 
 #[post("/")]
@@ -70,6 +72,7 @@ pub async fn create_cape(
         name: data.name.clone(),
         category: data.category.clone(),
         texture_url: data.texture_url.clone(),
+        legacy_name: data.legacy_name.clone()
     }
         .insert(&mut trans)
         .await?;
@@ -127,6 +130,20 @@ pub async fn update_cape(
                     where id = $2
                     ",
                     texture,
+                    id
+                )
+                    .execute(&**pool)
+                    .await?;
+            }
+
+            if let Some(legacy_name) = &data.legacy_name {
+                sqlx::query!(
+                    "
+                    update capes
+                    set legacy_name = $1
+                    where id = $2
+                    ",
+                    legacy_name.to_owned(),
                     id
                 )
                     .execute(&**pool)

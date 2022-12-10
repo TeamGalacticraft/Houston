@@ -7,7 +7,8 @@ pub struct Cape {
     pub id: i64,
     pub name: String,
     pub category: Category,
-    pub texture_url: String
+    pub texture_url: String,
+    pub legacy_name: Option<String>
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Eq, Clone)]
@@ -50,6 +51,7 @@ impl From<CapeModel> for Cape {
             name: model.name,
             category: model.category,
             texture_url: model.texture_url,
+            legacy_name: model.legacy_name
         }
     }
 }

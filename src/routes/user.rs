@@ -1,9 +1,11 @@
+use std::collections::HashMap;
 use actix_web::{delete, get, HttpRequest, HttpResponse, patch, route, web};
 use actix_web::web::{scope, ServiceConfig};
+use reqwest::Body;
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 use uuid::Uuid;
-use crate::database::models::player_cape_model::PlayerCapeModel;
+use crate::database::models::player_cape_model::{LegacyPlayerCapeModel, PlayerCapeModel};
 use crate::database::models::user_model::UserModel;
 use crate::models::cape::Cape;
 use crate::models::user::Role;
@@ -18,6 +20,8 @@ pub fn config(cfg: &mut ServiceConfig) {
             .service(update_user)
             .service(delete_user)
             .service(get_cape)
+            .service(list_capes)
+            .service(list_capes_legacy)
     );
 }
 
@@ -149,7 +153,7 @@ pub struct EditedCape {
 #[route("/{uuid}/cape", method = "POST", method = "PATCH")]
 pub async fn update_cape(
     req: HttpRequest,
-    info: web::Path<(Uuid,)>,
+    info: web::Path<(Uuid, )>,
     pool: web::Data<PgPool>,
     data: web::Json<EditedCape>,
 ) -> Result<HttpResponse, ApiError> {
@@ -188,8 +192,8 @@ pub async fn update_cape(
 #[delete("/{uuid}/cape")]
 pub async fn delete_cape(
     req: HttpRequest,
-    info: web::Path<(Uuid,)>,
-    pool: web::Data<PgPool>
+    info: web::Path<(Uuid, )>,
+    pool: web::Data<PgPool>,
 ) -> Result<HttpResponse, ApiError> {
     let id = info.into_inner().0;
     check_is_self_or_admin_from_headers(req.headers(), id, &**pool).await?;
@@ -199,4 +203,52 @@ pub async fn delete_cape(
     trans.commit().await?;
 
     Ok(HttpResponse::Ok().json(()))
+}
+
+pub fn format_legacy_text(
+    capes: Vec<LegacyPlayerCapeModel>
+) -> String {
+    let mut out = "".to_owned();
+
+    for cape in capes {
+        if out != "" {
+            out.push_str("\n");
+        }
+        out.push_str(cape.uuid.to_string().replace("-", "").as_str());
+        out.push_str(":");
+        out.push_str(cape.cape.as_str());
+        out.push_str(" ");
+        out.push_str(cape.name.as_str());
+    }
+
+    out.to_string()
+}
+
+#[get("/capes")]
+pub async fn list_capes(
+    pool: web::Data<PgPool>
+) -> Result<HttpResponse, ApiError> {
+    let capes = PlayerCapeModel::get_list(&**pool).await?;
+    Ok(HttpResponse::Ok().json(capes.iter().map(|x| {
+        (*x.0, Cape::from(*x.1))
+    }).collect::<HashMap<Uuid, Cape>>()))
+}
+
+#[get("/capes/legacy")]
+pub async fn list_capes_legacy(
+    req: HttpRequest,
+    pool: web::Data<PgPool>,
+) -> Result<HttpResponse, ApiError> {
+    let capes = PlayerCapeModel::get_legacy_list(&**pool).await?;
+
+    if req.headers().contains_key("Accepts") {
+        let accepts_type = req.headers().get("Accepts").expect("");
+        if accepts_type.eq("application/json") {
+            Ok(HttpResponse::Ok().json(capes))
+        } else {
+            Ok(HttpResponse::Ok().body(format_legacy_text(capes)))
+        }
+    } else {
+        Ok(HttpResponse::Ok().body(format_legacy_text(capes)))
+    }
 }

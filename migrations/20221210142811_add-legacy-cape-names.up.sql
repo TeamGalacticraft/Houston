@@ -1,0 +1,1 @@
+alter table capes add column legacy_name text default null;
