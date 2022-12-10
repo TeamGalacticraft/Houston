@@ -83,7 +83,7 @@ fn validate_env() -> bool {
 
     failed |= check::<String>("BIND_ADDR");
     failed |= check::<String>("SITE_URL");
-    failed |= check::<String>("DB_URL");
+    failed |= check::<String>("DATABASE_URL");
 
     failed |= check::<String>("MICROSOFT_CLIENT_ID");
     failed |= check::<String>("MICROSOFT_CLIENT_SECRET");

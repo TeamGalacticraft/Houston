@@ -6,17 +6,17 @@ use sqlx::postgres::PgPoolOptions;
 
 pub async fn connect() -> Result<PgPool, sqlx::Error> {
     info!("Initializing db connection");
-    let db_url = dotenvy::var("DB_URL").expect("`DB_URL` not in .env");
+    let db_url = dotenvy::var("DATABASE_URL").expect("`DATABASE_URL` not in .env");
 
     let pool = PgPoolOptions::new()
         .min_connections(
-            dotenvy::var("DB_MIN_CONN")
+            dotenvy::var("DATABASE_MIN_CONN")
                 .ok()
                 .and_then(|x| x.parse().ok())
                 .unwrap_or(0)
         )
         .max_connections(
-            dotenvy::var("DB_MAX_CONN")
+            dotenvy::var("DATABASE_MAX_CONN")
                 .ok()
                 .and_then(|x| x.parse().ok())
                 .unwrap_or(0)
@@ -29,7 +29,7 @@ pub async fn connect() -> Result<PgPool, sqlx::Error> {
 }
 
 pub async fn check_migrations() -> Result<(), sqlx::Error> {
-    let db_url = dotenvy::var("DB_URL").expect("`DB_URL` not in .env");
+    let db_url = dotenvy::var("DATABASE_URL").expect("`DATABASE_URL` not in .env");
     let db_url = db_url.as_str();
 
     if !Postgres::database_exists(db_url).await? {
