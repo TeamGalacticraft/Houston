@@ -10,7 +10,6 @@ dependencies = [
  "actix-cors",
  "actix-rt",
  "actix-web",
- "bitflags",
  "chrono",
  "dotenvy",
  "env_logger",
