@@ -9,7 +9,6 @@ use actix_web::{App, HttpServer, middleware, web};
 use env_logger::Env;
 use log::{error, info, warn};
 use utils::env::parse_var;
-// use crate::utils::env::parse_var_array;
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
@@ -87,11 +86,6 @@ fn validate_env() -> bool {
 
     failed |= check::<String>("MICROSOFT_CLIENT_ID");
     failed |= check::<String>("MICROSOFT_CLIENT_SECRET");
-
-    // if parse_var_array("ALLOWED_CALLBACK_URLS").is_none() {
-    //     warn!("`ALLOWED_CALLBACK_URLS` missing from .env or not json string array.");
-    //     failed |= true;
-    // }
 
     failed
 }

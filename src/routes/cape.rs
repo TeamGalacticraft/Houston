@@ -1,6 +1,5 @@
 use actix_web::{delete, get, HttpRequest, HttpResponse, patch, post, web};
 use actix_web::web::{scope, ServiceConfig};
-use log::info;
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 use crate::database::models::cape_model::CapeModel;
