@@ -1,4 +1,4 @@
-FROM rust:1.65-slim-bullseye as build
+FROM rust:1.65 as build
 
 RUN USER=root cargo new --bin Houston
 WORKDIR /usr/src/houston
