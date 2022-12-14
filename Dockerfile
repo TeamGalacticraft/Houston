@@ -6,7 +6,7 @@ WORKDIR /usr/src/houston
 COPY ./Cargo.lock ./Cargo.lock
 COPY ./Cargo.toml ./Cargo.toml
 
-RUN cargo build --release && rm src/*.rs
+RUN echo "fn main() {}" >> build.rs && cargo build --release && rm src/*.rs && rm build.rs
 
 COPY . .
 ARG SQLX_OFFLINE=true
