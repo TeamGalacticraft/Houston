@@ -18,11 +18,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Cache
-        id: build-cache
         uses: actions/cache@v3
         with:
-          path: target/**
-          key: ${{ runner.os }}-build-cache
+          path: target/
+          key: rust-${{ hashFiles('Cargo.lock') }}
+          restore-keys: |
+            rust-
       - name: Install Toolchain
         uses: actions-rs/toolchain@v1
         with:
