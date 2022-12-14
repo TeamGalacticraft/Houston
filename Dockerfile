@@ -1,7 +1,7 @@
 FROM rust:1.65 as build
 
 WORKDIR /usr/src/houston
-RUN USER=root cargo new --bin Houston .
+RUN USER=root cargo new --bin --name Houston .
 
 COPY ./Cargo.lock ./Cargo.lock
 COPY ./Cargo.toml ./Cargo.toml
