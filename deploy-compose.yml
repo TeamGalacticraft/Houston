@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  postgres_db:
+    image: postgres:alpine
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: houston
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  houston:
+    image: ghcr.io/teamgalacticraft/houston:${IMAGE_TAG}
+    environment:
+      BIND_ADDR: ${BIND_HOST}:${BIND_PORT}
+      SITE_URL: ${UI_URL}
+      DATABASE_URL: postgresql://houston:${POSTGRES_PASSWORD}@postgres_db/houston
+      MICROSOFT_CLIENT_ID: ${MSA_ID}
+      MICROSOFT_CLIENT_SECRET: ${MSA_SECRET}
+      SENTRY_DSN: ${SENTRY_DSN}
+    ports:
+      - "${BIND_PORT}:${BIND_PORT}"
+volumes:
+  db-data:
