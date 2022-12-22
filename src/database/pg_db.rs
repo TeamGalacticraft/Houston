@@ -19,7 +19,7 @@ pub async fn connect() -> Result<PgPool, sqlx::Error> {
             dotenvy::var("DATABASE_MAX_CONN")
                 .ok()
                 .and_then(|x| x.parse().ok())
-                .unwrap_or(0)
+                .unwrap_or(8)
         )
         .max_lifetime(Some(Duration::from_secs(60 * 60)))
         .connect(&db_url)
