@@ -17,6 +17,7 @@ services:
       MICROSOFT_CLIENT_ID: ${MSA_ID}
       MICROSOFT_CLIENT_SECRET: ${MSA_SECRET}
       SENTRY_DSN: ${SENTRY_DSN}
+      WAIT_HOSTS: postgres_db:5432
     ports:
       - "${BIND_PORT}:${BIND_PORT}"
 volumes:
