@@ -32,7 +32,7 @@ jobs:
             IMAGE_TAG=${{ inputs.label }} \
             BIND_HOST=${{ secrets.BIND_HOST }} \
             BIND_PORT=${{ secrets.BIND_PORT }} \
-            UI_URL=https://capes.galacticraft.team \
+            UI_URL=https://capes.galacticraft.net \
             POSTGRES_PASSWORD=${{ secrets.PG_PASS }} \
             MSA_ID=${{ secrets.MSA_ID }} \
             MSA_SECRET=${{ secrets.MSA_SECRET }} \
